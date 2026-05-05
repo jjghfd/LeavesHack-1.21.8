@@ -118,7 +118,7 @@ public class DamageUtil {
         if (entity.getBlockY() >= surface) return fallDamageReductions(entity, surface);
 
         // Under the surface
-        BlockHitResult raycastResult = mc.world.raycast(new RaycastContext(entity.getPos(), new Vec3d(entity.getX(), mc.world.getBottomY(), entity.getZ()), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.WATER, entity));
+        BlockHitResult raycastResult = mc.world.raycast(new RaycastContext(entity.getPos(), new Vec3d(entity.getX(), mc.world.getBottomY(), entity.getZ()), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, entity));
         if (raycastResult.getType() == HitResult.Type.MISS) return 0;
 
         return fallDamageReductions(entity, raycastResult.getBlockPos().getY());
@@ -231,8 +231,8 @@ public class DamageUtil {
     }
 
     public static int getProtectionAmount(ItemStack stack) {
-        int modifierBlast = EnchantmentHelper.getLevel(Enchantments.BLAST_PROTECTION, stack);
-        int modifier = EnchantmentHelper.getLevel(Enchantments.PROTECTION, stack);
+        int modifierBlast = getEnchantmentLevel(stack, Enchantments.BLAST_PROTECTION);
+        int modifier = getEnchantmentLevel(stack, Enchantments.PROTECTION);
         return modifierBlast * 2 + modifier;
     }
 
