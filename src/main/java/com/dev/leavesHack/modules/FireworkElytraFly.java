@@ -151,7 +151,7 @@ public class FireworkElytraFly extends Module {
     @Override
     public void onDeactivate() {
         if (pressSneak.get()) {
-            mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.PRESS_SNEAKING));
+            mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.PRESS_SHIFT_KEY));
         }
         if (releaseSneak.get()) {
             long delay = releaseDelay.get();
@@ -160,7 +160,7 @@ public class FireworkElytraFly extends Module {
                 @Override
                 public void run() {
                     mc.execute(() -> {
-                        mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.RELEASE_SNEAKING));
+                        mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.RELEASE_SHIFT_KEY));
                     });
                 }
             }, delay);
@@ -239,13 +239,13 @@ public class FireworkElytraFly extends Module {
         ItemStack chestStack = mc.player.getEquippedStack(EquipmentSlot.CHEST);
         boolean wearingElytra = chestStack.getItem() == Items.ELYTRA && chestStack.getDamage() < chestStack.getMaxDamage() - 1;
         if (wearingElytra && !isFallFlying && !mc.player.isOnGround()) {
-            sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.START_SNEAKING));
+            sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.PRESS_SHIFT_KEY));
             mc.player.startGliding();
         }
         if (wearingElytra && !mc.player.isOnGround() && unbreaking.get() && swapTimer.passedMs(fakeDelay.get())) {
             mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, 6, 0, SlotActionType.PICKUP, mc.player);
             mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, 6, 0, SlotActionType.PICKUP, mc.player);
-            mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.START_SNEAKING));
+            mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.PRESS_SHIFT_KEY));
             mc.player.startGliding();
             swapTimer.reset();
         }
@@ -255,7 +255,7 @@ public class FireworkElytraFly extends Module {
                 mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, 6, 0, SlotActionType.PICKUP, mc.player);
                 mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, elytra, 0, SlotActionType.PICKUP, mc.player);
                 if (!mc.player.isOnGround()) {
-                    sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.START_SNEAKING));
+                    sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.PRESS_SHIFT_KEY));
                     mc.player.startGliding();
                 }
                 if (!hasFirework && fireWorkMode.get() == FireWorkMode.Auto) {
@@ -327,7 +327,7 @@ public class FireworkElytraFly extends Module {
     }
     public boolean isMoving() {
         if (mc.player == null || mc.player.input == null) return false;
-        return mc.player.input.forwardSpeed != 0.0 || mc.player.input.sidewaysSpeed != 0.0;
+        return mc.player.input.movementForward != 0.0 || mc.player.input.movementSideways != 0.0;
     }
     public float getSprintYaw(float yaw) {
         if (mc.options.forwardKey.isPressed() && !mc.options.backKey.isPressed()) {

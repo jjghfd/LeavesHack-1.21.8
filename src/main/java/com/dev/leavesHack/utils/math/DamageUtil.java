@@ -118,7 +118,7 @@ public class DamageUtil {
         if (entity.getBlockY() >= surface) return fallDamageReductions(entity, surface);
 
         // Under the surface
-        BlockHitResult raycastResult = mc.world.raycast(new RaycastContext(entity.getPos(), new Vec3d(entity.getX(), mc.world.getBottomY(), entity.getZ()), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, entity));
+        BlockHitResult raycastResult = mc.world.raycast(new RaycastContext(entity.getPos(), new Vec3d(entity.getX(), mc.world.getBottomY(), entity.getZ()), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.WATER, entity));
         if (raycastResult.getType() == HitResult.Type.MISS) return 0;
 
         return fallDamageReductions(entity, raycastResult.getBlockPos().getY());
@@ -175,11 +175,11 @@ public class DamageUtil {
     }
 
     public static double getARMOR_TOUGHNESS(LivingEntity entity) {
-        return entity.getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS);
+        return entity.getAttributeValue(EntityAttributes.ARMOR_TOUGHNESS);
     }
 
     private static float getArmor(LivingEntity entity) {
-        return (float) Math.floor(entity.getAttributeValue(EntityAttributes.GENERIC_ARMOR));
+        return (float) Math.floor(entity.getAttributeValue(EntityAttributes.ARMOR));
     }
 
     private static float protectionReduction(LivingEntity player, float damage, DamageSource source) {
@@ -221,7 +221,7 @@ public class DamageUtil {
     }
 
     private static Iterable<ItemStack> getArmorItems(LivingEntity entity) {
-        return entity.getArmorItems();
+        return java.util.Arrays.asList(entity.getEquippedStack(net.minecraft.entity.EquipmentSlot.FEET), entity.getEquippedStack(net.minecraft.entity.EquipmentSlot.LEGS), entity.getEquippedStack(net.minecraft.entity.EquipmentSlot.CHEST), entity.getEquippedStack(net.minecraft.entity.EquipmentSlot.HEAD));
     }
 
     public static int getProtectionAmount(Iterable<ItemStack> equipment) {
@@ -231,8 +231,8 @@ public class DamageUtil {
     }
 
     public static int getProtectionAmount(ItemStack stack) {
-        int modifierBlast = getEnchantmentLevel(stack, Enchantments.BLAST_PROTECTION);
-        int modifier = getEnchantmentLevel(stack, Enchantments.PROTECTION);
+        int modifierBlast = EnchantmentHelper.getLevel(Enchantments.BLAST_PROTECTION, stack);
+        int modifier = EnchantmentHelper.getLevel(Enchantments.PROTECTION, stack);
         return modifierBlast * 2 + modifier;
     }
 

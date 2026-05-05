@@ -173,9 +173,8 @@ public class AutoArmorPlus extends Module {
                 prot = 1;
             }
             if (is.hasEnchantments()) {
-                ItemEnchantmentsComponent enchantments = EnchantmentHelper.getEnchantments(is);
-                if (ignoreBinding.get() && enchantments.hasEnchantment(Enchantments.BINDING_CURSE)) return -1;
-                prot += enchantments.getLevel(Enchantments.PROTECTION);
+                if (ignoreBinding.get() && com.dev.leavesHack.utils.math.DamageUtil.getEnchantmentLevel(is, Enchantments.BINDING_CURSE) > 0) return -1;
+                prot += com.dev.leavesHack.utils.math.DamageUtil.getEnchantmentLevel(is, Enchantments.PROTECTION);
             }
             return getBaseProtection(item) + prot;
         } else if (!is.isEmpty()) {
@@ -184,33 +183,31 @@ public class AutoArmorPlus extends Module {
         return -1;
     }
     private int getBaseProtection(Item item) {
-        return switch (item) {
-            case Items.LEATHER_HELMET -> 1;
-            case Items.LEATHER_CHESTPLATE -> 3;
-            case Items.LEATHER_LEGGINGS -> 2;
-            case Items.LEATHER_BOOTS -> 1;
-            case Items.CHAINMAIL_HELMET -> 2;
-            case Items.CHAINMAIL_CHESTPLATE -> 5;
-            case Items.CHAINMAIL_LEGGINGS -> 4;
-            case Items.CHAINMAIL_BOOTS -> 1;
-            case Items.IRON_HELMET -> 3;
-            case Items.IRON_CHESTPLATE -> 6;
-            case Items.IRON_LEGGINGS -> 5;
-            case Items.IRON_BOOTS -> 2;
-            case Items.GOLDEN_HELMET -> 2;
-            case Items.GOLDEN_CHESTPLATE -> 5;
-            case Items.GOLDEN_LEGGINGS -> 3;
-            case Items.GOLDEN_BOOTS -> 1;
-            case Items.DIAMOND_HELMET -> 3;
-            case Items.DIAMOND_CHESTPLATE -> 8;
-            case Items.DIAMOND_LEGGINGS -> 6;
-            case Items.DIAMOND_BOOTS -> 3;
-            case Items.NETHERITE_HELMET -> 3;
-            case Items.NETHERITE_CHESTPLATE -> 8;
-            case Items.NETHERITE_LEGGINGS -> 6;
-            case Items.NETHERITE_BOOTS -> 3;
-            case Items.ELYTRA -> 1;
-            default -> 0;
-        };
+        if (item == Items.LEATHER_HELMET) return 1;
+        if (item == Items.LEATHER_CHESTPLATE) return 3;
+        if (item == Items.LEATHER_LEGGINGS) return 2;
+        if (item == Items.LEATHER_BOOTS) return 1;
+        if (item == Items.CHAINMAIL_HELMET) return 2;
+        if (item == Items.CHAINMAIL_CHESTPLATE) return 5;
+        if (item == Items.CHAINMAIL_LEGGINGS) return 4;
+        if (item == Items.CHAINMAIL_BOOTS) return 1;
+        if (item == Items.IRON_HELMET) return 3;
+        if (item == Items.IRON_CHESTPLATE) return 6;
+        if (item == Items.IRON_LEGGINGS) return 5;
+        if (item == Items.IRON_BOOTS) return 2;
+        if (item == Items.GOLDEN_HELMET) return 2;
+        if (item == Items.GOLDEN_CHESTPLATE) return 5;
+        if (item == Items.GOLDEN_LEGGINGS) return 3;
+        if (item == Items.GOLDEN_BOOTS) return 1;
+        if (item == Items.DIAMOND_HELMET) return 3;
+        if (item == Items.DIAMOND_CHESTPLATE) return 8;
+        if (item == Items.DIAMOND_LEGGINGS) return 6;
+        if (item == Items.DIAMOND_BOOTS) return 3;
+        if (item == Items.NETHERITE_HELMET) return 3;
+        if (item == Items.NETHERITE_CHESTPLATE) return 8;
+        if (item == Items.NETHERITE_LEGGINGS) return 6;
+        if (item == Items.NETHERITE_BOOTS) return 3;
+        if (item == Items.ELYTRA) return 1;
+        return 0;
     }
 }

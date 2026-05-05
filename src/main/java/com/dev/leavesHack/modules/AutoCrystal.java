@@ -369,20 +369,19 @@ public class AutoCrystal extends Module {
     private PlayerEntity predictTarget(PlayerEntity target) {
         if (predict.get() <= 0) return target;
         int ticks = predict.get();
-        double dx = target.getX() - target.prevX;
-        double dy = target.getY() - target.prevY;
-        double dz = target.getZ() - target.prevZ;
+        double dx = target.getVelocity().x;
+        double dy = target.getVelocity().y;
+        double dz = target.getVelocity().z;
         double predictX = target.getX() + dx * ticks;
         double predictY = target.getY() + dy * ticks;
         double predictZ = target.getZ() + dz * ticks;
         PlayerEntity fake = new PlayerEntity(
                 mc.world,
-                target.getBlockPos(),
-                target.getYaw(),
                 new GameProfile(UUID.randomUUID(), "Predict")
         ) {
             @Override public boolean isSpectator() { return false; }
             @Override public boolean isCreative() { return false; }
+            @Override public net.minecraft.world.GameMode getGameMode() { return net.minecraft.world.GameMode.SURVIVAL; }
         };
         fake.refreshPositionAndAngles(predictX, predictY, predictZ, target.getYaw(), target.getPitch());
         fake.setPose(target.getPose());

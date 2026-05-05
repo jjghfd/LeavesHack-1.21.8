@@ -29,12 +29,12 @@ public class MixinGameRenderer {
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180.0f));
 
-        Render3DUtil.lastProjMat.set(RenderSystem.getProjectionMatrix());
+        // Render3DUtil.lastProjMat.set(RenderSystem.getProjectionMatrix());
         Render3DUtil.lastModMat.set(RenderSystem.getModelViewMatrix());
         Render3DUtil.lastWorldSpaceMatrix.set(matrixStack.peek().getPositionMatrix());
 
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
-        MeteorClient.EVENT_BUS.post(RenderLeaves3DEvent.get(matrixStack, tickCounter.tickDelta));
+        MeteorClient.EVENT_BUS.post(RenderLeaves3DEvent.get(matrixStack, tickCounter.getTickDelta(true)));
         GL11.glDisable(GL11.GL_LINE_SMOOTH);
     }
 }

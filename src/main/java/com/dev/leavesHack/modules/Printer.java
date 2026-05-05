@@ -134,7 +134,7 @@ public class Printer extends Module {
     @Override
     public void onDeactivate() {
         if (hasSneak) {
-            mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.RELEASE_SNEAKING));
+            mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.RELEASE_SHIFT_KEY));
             hasSneak = false;
         }
     }
@@ -182,7 +182,7 @@ public class Printer extends Module {
                 }
                 if (required.getBlock() instanceof RedstoneWireBlock && (mc.world.isAir(pos.down()) || mc.world.getBlockState(pos.down()).isReplaceable())) continue;
                 if (BlockUtil.needSneak(BlockUtil.getBlock(pos.offset(target))) && !hasSneak) {
-                    mc.player.networkHandler.sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.PRESS_SNEAKING));
+                    mc.player.networkHandler.sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.PRESS_SHIFT_KEY));
                     hasSneak = true;
                     mc.player.setSneaking(true);
                     shiftTimer.reset();
@@ -215,7 +215,7 @@ public class Printer extends Module {
                     BlockUtil.placeBlock(pos, target, false);
                 }
                 if (hasSneak && ignoreSneak.get()) {
-                    mc.player.networkHandler.sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.RELEASE_SNEAKING));
+                    mc.player.networkHandler.sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.RELEASE_SHIFT_KEY));
                     mc.player.setSneaking(false);
                     hasSneak = false;
                 }
@@ -284,15 +284,15 @@ public class Printer extends Module {
     @EventHandler
     public void onMove2(MoveEvent event) {
         if (shiftTimer.passedMs(shiftTime.get() * 2) && ignoreSneak.get() && hasSneak) {
-            mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.RELEASE_SNEAKING));
+            mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.RELEASE_SHIFT_KEY));
             hasSneak = false;
             return;
         }
         if (!hasSneak) return;
         double speed = sneakSpeed.get();
         double moveSpeed = 0.2873 / 100 * speed;
-        double n = mc.player.input.forwardSpeed;
-        double n2 = mc.player.input.sidewaysSpeed;
+        double n = mc.player.input.movementForward;
+        double n2 = mc.player.input.movementSideways;
         double n3 = mc.player.getYaw();
         if (n == 0.0 && n2 == 0.0) {
             event.setX(0.0);

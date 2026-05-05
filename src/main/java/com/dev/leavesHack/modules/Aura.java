@@ -229,7 +229,7 @@ public class Aura extends Module {
                item == Items.GOLDEN_AXE || item == Items.DIAMOND_AXE || item == Items.NETHERITE_AXE;
     }
     private boolean isMace(Item item) {
-        return item == Items.NETHERITE_MACE;
+        return item == Items.MACE;
     }
     private boolean isTrident(Item item) {
         return item == Items.TRIDENT;

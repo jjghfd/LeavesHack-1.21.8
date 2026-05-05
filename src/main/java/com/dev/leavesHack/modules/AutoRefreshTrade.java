@@ -153,7 +153,7 @@ public class AutoRefreshTrade extends Module {
                 TradeOffer tradeOffer = list.get(size);
                 Item item = tradeOffer.getSellItem().getItem();
                 ItemStack sellStack = tradeOffer.getSellItem();
-                if (item instanceof EnchantedBookItem) {
+                if (item == Items.ENCHANTED_BOOK) {
                     findBook = true;
                     ItemEnchantmentsComponent enchantments = EnchantmentHelper.getEnchantments(sellStack);
                     enchantments.getEnchantments().forEach(entry -> {
