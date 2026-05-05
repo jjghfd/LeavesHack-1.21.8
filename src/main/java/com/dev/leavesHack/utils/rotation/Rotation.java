@@ -13,14 +13,14 @@ public class Rotation {
     public static float rotationPitch = 0;
     public static void snapAt(float yaw, float pitch) {
         if (GlobalSetting.INSTANCE.grimRotation.get()) {
-            sendPacket(new PlayerMoveC2SPacket.Full(mc.player.getX(), mc.player.getY(), mc.player.getZ(), yaw, pitch, mc.player.isOnGround()));
+            sendPacket(new PlayerMoveC2SPacket.Full(mc.player.getX(), mc.player.getY(), mc.player.getZ(), yaw, pitch, mc.player.isOnGround(), false));
         } else {
-            sendPacket(new PlayerMoveC2SPacket.LookAndOnGround(yaw, pitch, mc.player.isOnGround()));
+            sendPacket(new PlayerMoveC2SPacket.LookAndOnGround(yaw, pitch, mc.player.isOnGround(), false));
         }
     }
     public static void snapBack() {
         if (!GlobalSetting.INSTANCE.snapBack.get()) return;
-        sendPacket(new PlayerMoveC2SPacket.Full(mc.player.getX(), mc.player.getY(), mc.player.getZ(), rotationYaw, rotationPitch, mc.player.isOnGround()));
+        sendPacket(new PlayerMoveC2SPacket.Full(mc.player.getX(), mc.player.getY(), mc.player.getZ(), rotationYaw, rotationPitch, mc.player.isOnGround(), false));
     }
     public static void sendPacket(Packet<?> packet) {
         mc.getNetworkHandler().sendPacket(packet);

@@ -544,7 +544,7 @@ public class PacketMine extends Module {
             }
         }
         if (bypassGround.get() && !mc.player.isGliding() && targetPos != null && !isAir(targetPos) && !mc.player.isOnGround()){
-            mc.getNetworkHandler().sendPacket(new PlayerMoveC2SPacket.Full(mc.player.getX(), mc.player.getY() + 1.0e-9, mc.player.getZ(), mc.player.getYaw(), mc.player.getPitch(), true));
+            mc.getNetworkHandler().sendPacket(new PlayerMoveC2SPacket.Full(mc.player.getX(), mc.player.getY() + 1.0e-9, mc.player.getZ(), mc.player.getYaw(), mc.player.getPitch(), true, false));
             mc.player.onLanding();
         }
         if (swing.get()) mc.player.swingHand(Hand.MAIN_HAND);
@@ -552,7 +552,7 @@ public class PacketMine extends Module {
     }
     private void sendStopSecond() {
         if (bypassGround.get() && !mc.player.isGliding() && secondPos != null && !isAir(secondPos) && !mc.player.isOnGround()){
-            mc.getNetworkHandler().sendPacket(new PlayerMoveC2SPacket.Full(mc.player.getX(), mc.player.getY() + 1.0e-9, mc.player.getZ(), mc.player.getYaw(), mc.player.getPitch(), true));
+            mc.getNetworkHandler().sendPacket(new PlayerMoveC2SPacket.Full(mc.player.getX(), mc.player.getY() + 1.0e-9, mc.player.getZ(), mc.player.getYaw(), mc.player.getPitch(), true, false));
             mc.player.onLanding();
         }
         if (swing.get()) mc.player.swingHand(Hand.MAIN_HAND);

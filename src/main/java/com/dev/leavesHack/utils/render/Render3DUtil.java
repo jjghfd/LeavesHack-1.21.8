@@ -28,7 +28,7 @@ public class Render3DUtil {
     }
     public static void renderText3D(String info, Vec3d targetPos, int color) {
         Camera camera = mc.gameRenderer.getCamera();
-        RenderSystem.enableBlend();
+        RenderSystem.enableBlending();
         GL11.glDepthFunc(GL11.GL_ALWAYS);
         MatrixStack matrixStack = new MatrixStack();
         double x = targetPos.getX();
@@ -38,7 +38,7 @@ public class Render3DUtil {
         float hwidth = width / 2.0f;
         Render3DUtil.renderInfo(info, hwidth, x, y, z, camera, matrixStack, color);
         GL11.glDepthFunc(GL11.GL_LEQUAL);
-        RenderSystem.disableBlend();
+        RenderSystem.disableBlending();
     }
     public static void renderInfo(String info, float width, double x, double y, double z, Camera camera, MatrixStack matrices, int color) {
         final Vec3d pos = camera.getPos();

@@ -54,7 +54,7 @@ public class AutoLoginAccounts extends System<AutoLoginAccounts> {
     public AutoLoginAccounts fromTag(NbtCompound tag) {
         accounts.clear();
 
-        NbtList list = tag.getList("accounts", 10);
+        List<NbtElement> list = tag.getList("accounts");
 
         for (NbtElement e : list) {
             NbtCompound t = (NbtCompound) e;

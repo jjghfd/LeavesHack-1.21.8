@@ -32,7 +32,7 @@ public class InventoryUtil {
     static int lastSelect = -1;
     public static int getEquipmentLevel(PlayerEntity player, RegistryKey<Enchantment> enchantmentKey) {
         int maxLevel = 0;
-        for (ItemStack stack : player.getInventory().armor) {
+        for (ItemStack stack : player.getArmorItems()) {
             if (!stack.isEmpty()) {
                 int level = getEnchantmentLevel(stack, enchantmentKey);
                 if (level > maxLevel) {

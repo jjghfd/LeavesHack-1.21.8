@@ -160,18 +160,18 @@ public class AutoRefreshTrade extends Module {
                         int level = enchantments.getLevel(entry);
                         int maxLevel = entry.value().getMaxLevel();
                         String name = Enchantment.getName(entry, level).getString();
-                        mc.player.sendMessage(Text.of("[LeavesHack]本次结果 " + name));
+                        mc.player.sendMessage(Text.of("[LeavesHack]本次结果 " + name), false);
                         for (RegistryKey<Enchantment> enchantmentKey : enchantmentList.get()){
                             if (hasEnchantments(sellStack, enchantmentKey) && (level >= enchantmentLevel.get() || level == maxLevel)) {
                                 find.set(true);
-                                mc.player.sendMessage(Text.of("[LeavesHack]:已找到所需附魔"));
+                                mc.player.sendMessage(Text.of("[LeavesHack]:已找到所需附魔"), false);
                                 return;
                             }
                         }
                     });
                 }
             }
-            if (!findBook) mc.player.sendMessage(Text.of("[LeavesHack]:本次未找到附魔书"));
+            if (!findBook) mc.player.sendMessage(Text.of("[LeavesHack]:本次未找到附魔书"), false);
             mc.getNetworkHandler().sendPacket(new CloseHandledScreenC2SPacket(mc.player.currentScreenHandler.syncId));
             mc.currentScreen.close();
             if (find.get()) {

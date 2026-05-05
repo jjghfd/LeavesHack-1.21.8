@@ -34,7 +34,7 @@ public class MixinGameRenderer {
         Render3DUtil.lastWorldSpaceMatrix.set(matrixStack.peek().getPositionMatrix());
 
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
-        MeteorClient.EVENT_BUS.post(RenderLeaves3DEvent.get(matrixStack, tickCounter.getTickDelta(true)));
+        MeteorClient.EVENT_BUS.post(RenderLeaves3DEvent.get(matrixStack, tickCounter.tickDelta));
         GL11.glDisable(GL11.GL_LINE_SMOOTH);
     }
 }

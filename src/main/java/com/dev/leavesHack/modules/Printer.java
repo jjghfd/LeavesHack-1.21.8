@@ -134,7 +134,7 @@ public class Printer extends Module {
     @Override
     public void onDeactivate() {
         if (hasSneak) {
-            mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.RELEASE_SHIFT_KEY));
+            mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.RELEASE_SNEAKING));
             hasSneak = false;
         }
     }
@@ -154,7 +154,7 @@ public class Printer extends Module {
             if (listMode.get() == ListMode.Whitelist && !whitelist.get().contains(required.getBlock())) continue;
             if (!required.isAir() && !required.isLiquid() && (mc.world.isAir(pos) || BlockUtil.canReplace(pos)) && !BlockUtil.hasEntity(pos, false)) {
                 if (placed >= 1) {
-                    if (debug.get()) mc.player.sendMessage(Text.of("已超过最大数量，当前placed:" + placed));
+                    if (debug.get()) mc.player.sendMessage(Text.of("已超过最大数量，当前placed:" + placed), false);
                     return;
                 }
                 int slot = inventorySwap.get() ? InventoryUtil.findBlockInventory(required.getBlock()) : InventoryUtil.findBlock(required.getBlock());
@@ -166,23 +166,23 @@ public class Printer extends Module {
                 Direction target = sides.getFirst();
                 Direction facing = getBlockFacing(required);
                 if (facing != null && !isRedstoneComponent(required)) {
-                    if (debug.get()) mc.player.sendMessage(Text.of("方块包含方向"));
+                    if (debug.get()) mc.player.sendMessage(Text.of("方块包含方向"), false);
                     boolean find = false;
                     for (Direction i : sides) {
-                        if (debug.get()) mc.player.sendMessage(Text.of("side列表: " + i));
+                        if (debug.get()) mc.player.sendMessage(Text.of("side列表: " + i), false);
                         if (checkState(pos.offset(i), required, i.getOpposite())) {
                             find = true;
                             target = i;
                         }
                     }
                     if (!find) {
-                        if (debug.get()) mc.player.sendMessage(Text.of("未找到目标方向"));
+                        if (debug.get()) mc.player.sendMessage(Text.of("未找到目标方向"), false);
                         continue;
                     }
                 }
                 if (required.getBlock() instanceof RedstoneWireBlock && (mc.world.isAir(pos.down()) || mc.world.getBlockState(pos.down()).isReplaceable())) continue;
                 if (BlockUtil.needSneak(BlockUtil.getBlock(pos.offset(target))) && !hasSneak) {
-                    mc.player.networkHandler.sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.PRESS_SHIFT_KEY));
+                    mc.player.networkHandler.sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.PRESS_SNEAKING));
                     hasSneak = true;
                     mc.player.setSneaking(true);
                     shiftTimer.reset();
@@ -215,7 +215,7 @@ public class Printer extends Module {
                     BlockUtil.placeBlock(pos, target, false);
                 }
                 if (hasSneak && ignoreSneak.get()) {
-                    mc.player.networkHandler.sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.RELEASE_SHIFT_KEY));
+                    mc.player.networkHandler.sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.RELEASE_SNEAKING));
                     mc.player.setSneaking(false);
                     hasSneak = false;
                 }
@@ -284,15 +284,15 @@ public class Printer extends Module {
     @EventHandler
     public void onMove2(MoveEvent event) {
         if (shiftTimer.passedMs(shiftTime.get() * 2) && ignoreSneak.get() && hasSneak) {
-            mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.RELEASE_SHIFT_KEY));
+            mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.RELEASE_SNEAKING));
             hasSneak = false;
             return;
         }
         if (!hasSneak) return;
         double speed = sneakSpeed.get();
         double moveSpeed = 0.2873 / 100 * speed;
-        double n = mc.player.input.movementForward;
-        double n2 = mc.player.input.movementSideways;
+        double n = mc.player.input.forwardSpeed;
+        double n2 = mc.player.input.sidewaysSpeed;
         double n3 = mc.player.getYaw();
         if (n == 0.0 && n2 == 0.0) {
             event.setX(0.0);
@@ -358,7 +358,7 @@ public class Printer extends Module {
         if (result != null && isSameFacing(result, targetState)) {
             return true;
         } else if (result == null) {
-            if (debug.get()) mc.player.sendMessage(Text.of("result: null"));
+            if (debug.get()) mc.player.sendMessage(Text.of("result: null"), false);
         }
         return false;
     }
@@ -390,7 +390,7 @@ public class Printer extends Module {
 
 
 
-        if (debug.get()) mc.player.sendMessage(Text.of("fa: " + fa + " fb: " + fb));
+        if (debug.get()) mc.player.sendMessage(Text.of("fa: " + fa + " fb: " + fb), false);
         if (fa == null || fb == null) return true;
 
         return fa == fb;

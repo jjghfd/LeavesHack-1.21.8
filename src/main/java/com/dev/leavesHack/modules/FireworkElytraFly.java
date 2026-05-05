@@ -152,7 +152,7 @@ public class FireworkElytraFly extends Module {
     @Override
     public void onDeactivate() {
         if (pressSneak.get()) {
-            mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.PRESS_SHIFT_KEY));
+            mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.PRESS_SNEAKING));
         }
         if (releaseSneak.get()) {
             long delay = releaseDelay.get();
@@ -161,7 +161,7 @@ public class FireworkElytraFly extends Module {
                 @Override
                 public void run() {
                     mc.execute(() -> {
-                        mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.RELEASE_SHIFT_KEY));
+                        mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.RELEASE_SNEAKING));
                     });
                 }
             }, delay);
@@ -223,7 +223,7 @@ public class FireworkElytraFly extends Module {
         yaw = getSprintYaw(mc.player.getYaw());
         pitch = getPitch(mc.player.getPitch());
         if (deBug.get()) info("Yaw: " + yaw + " Pitch: " + pitch);
-        if (mode.get() == Mode.GrimDurability) mc.getNetworkHandler().sendPacket(new PlayerMoveC2SPacket.Full(mc.player.getX(), mc.player.getY(), mc.player.getZ(), yaw, pitch, mc.player.isOnGround()));
+        if (mode.get() == Mode.GrimDurability) mc.getNetworkHandler().sendPacket(new PlayerMoveC2SPacket.Full(mc.player.getX(), mc.player.getY(), mc.player.getZ(), yaw, pitch, mc.player.isOnGround(), false));
         boolean hasFirework = false;
         if (checkFirework.get()) {
             for (Entity entity : mc.world.getEntities()) {
@@ -239,13 +239,13 @@ public class FireworkElytraFly extends Module {
 //        int armor = findChestplate();
         boolean wearingElytra = mc.player.getEquippedStack(EquipmentSlot.CHEST).getItem() == Items.ELYTRA && ElytraItem.isUsable(mc.player.getEquippedStack(EquipmentSlot.CHEST));
         if (wearingElytra && !isFallFlying && !mc.player.isOnGround()) {
-            sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.START_GLIDING));
+            sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.START_SNEAKING));
             mc.player.startGliding();
         }
         if (wearingElytra && !mc.player.isOnGround() && unbreaking.get() && swapTimer.passedMs(fakeDelay.get())) {
             mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, 6, 0, SlotActionType.PICKUP, mc.player);
             mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, 6, 0, SlotActionType.PICKUP, mc.player);
-            mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.START_GLIDING));
+            mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.START_SNEAKING));
             mc.player.startGliding();
             swapTimer.reset();
         }
@@ -255,7 +255,7 @@ public class FireworkElytraFly extends Module {
                 mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, 6, 0, SlotActionType.PICKUP, mc.player);
                 mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, elytra, 0, SlotActionType.PICKUP, mc.player);
                 if (!mc.player.isOnGround()) {
-                    sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.START_GLIDING));
+                    sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.START_SNEAKING));
                     mc.player.startGliding();
                 }
                 if (!hasFirework && fireWorkMode.get() == FireWorkMode.Auto) {
@@ -327,7 +327,7 @@ public class FireworkElytraFly extends Module {
     }
     public boolean isMoving() {
         if (mc.player == null || mc.player.input == null) return false;
-        return mc.player.input.movementForward != 0.0 || mc.player.input.movementSideways != 0.0;
+        return mc.player.input.forwardSpeed != 0.0 || mc.player.input.sidewaysSpeed != 0.0;
     }
     public float getSprintYaw(float yaw) {
         if (mc.options.forwardKey.isPressed() && !mc.options.backKey.isPressed()) {
