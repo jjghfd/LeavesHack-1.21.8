@@ -149,7 +149,7 @@ public class DamageUtil {
         damage = resistanceReduction(entity, damage);
 
         // Protection reduction
-        damage = net.minecraft.entity.DamageUtil.getInflictedDamage(damage, getProtectionAmount(entity.getArmorItems()));
+        damage = net.minecraft.entity.DamageUtil.getInflictedDamage(damage, getProtectionAmount(getArmorItems(entity)));
 
         return Math.max(damage, 0);
     }
@@ -187,7 +187,7 @@ public class DamageUtil {
 
         int damageProtection = 0;
 
-        for (ItemStack stack : player.getAllArmorItems()) {
+        for (ItemStack stack : getArmorItems(player)) {
             Object2IntMap<RegistryEntry<Enchantment>> enchantments = new Object2IntOpenHashMap<>();
             getEnchantments(stack, enchantments);
 
@@ -220,6 +220,10 @@ public class DamageUtil {
         return net.minecraft.entity.DamageUtil.getInflictedDamage(damage, damageProtection);
     }
 
+    private static Iterable<ItemStack> getArmorItems(LivingEntity entity) {
+        return entity.getArmorItems();
+    }
+
     public static int getProtectionAmount(Iterable<ItemStack> equipment) {
         MutableInt mutableInt = new MutableInt();
         equipment.forEach(i -> mutableInt.add(getProtectionAmount(i)));
@@ -227,8 +231,8 @@ public class DamageUtil {
     }
 
     public static int getProtectionAmount(ItemStack stack) {
-        int modifierBlast = EnchantmentHelper.getLevel(mc.world.getRegistryManager().get(Enchantments.BLAST_PROTECTION.getRegistryRef()).getEntry(Enchantments.BLAST_PROTECTION).get(), stack);
-        int modifier = EnchantmentHelper.getLevel(mc.world.getRegistryManager().get(Enchantments.PROTECTION.getRegistryRef()).getEntry(Enchantments.PROTECTION).get(), stack);
+        int modifierBlast = EnchantmentHelper.getLevel(Enchantments.BLAST_PROTECTION, stack);
+        int modifier = EnchantmentHelper.getLevel(Enchantments.PROTECTION, stack);
         return modifierBlast * 2 + modifier;
     }
 

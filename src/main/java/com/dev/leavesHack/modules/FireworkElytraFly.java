@@ -19,8 +19,7 @@ import net.minecraft.client.network.SequencedPacketCreator;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ElytraItem;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket;
@@ -237,7 +236,8 @@ public class FireworkElytraFly extends Module {
         isUsingFirework = hasFirework;
         int elytra = InventoryUtil.findItemInventorySlot(Items.ELYTRA);
 //        int armor = findChestplate();
-        boolean wearingElytra = mc.player.getEquippedStack(EquipmentSlot.CHEST).getItem() == Items.ELYTRA && ElytraItem.isUsable(mc.player.getEquippedStack(EquipmentSlot.CHEST));
+        ItemStack chestStack = mc.player.getEquippedStack(EquipmentSlot.CHEST);
+        boolean wearingElytra = chestStack.getItem() == Items.ELYTRA && chestStack.getDamage() < chestStack.getMaxDamage() - 1;
         if (wearingElytra && !isFallFlying && !mc.player.isOnGround()) {
             sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.START_SNEAKING));
             mc.player.startGliding();

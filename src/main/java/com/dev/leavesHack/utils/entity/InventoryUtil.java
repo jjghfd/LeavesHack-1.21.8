@@ -11,6 +11,7 @@ import net.minecraft.block.SlabBlock;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -32,11 +33,14 @@ public class InventoryUtil {
     static int lastSelect = -1;
     public static int getEquipmentLevel(PlayerEntity player, RegistryKey<Enchantment> enchantmentKey) {
         int maxLevel = 0;
-        for (ItemStack stack : player.getArmorItems()) {
-            if (!stack.isEmpty()) {
-                int level = getEnchantmentLevel(stack, enchantmentKey);
-                if (level > maxLevel) {
-                    maxLevel = level;
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            if (slot.isArmorSlot()) {
+                ItemStack stack = player.getEquippedStack(slot);
+                if (!stack.isEmpty()) {
+                    int level = getEnchantmentLevel(stack, enchantmentKey);
+                    if (level > maxLevel) {
+                        maxLevel = level;
+                    }
                 }
             }
         }

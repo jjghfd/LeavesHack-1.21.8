@@ -19,7 +19,9 @@ import net.minecraft.entity.Tameable;
 import net.minecraft.entity.mob.EndermanEntity;
 import net.minecraft.entity.mob.ZombifiedPiglinEntity;
 import net.minecraft.entity.passive.WolfEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
@@ -172,11 +174,11 @@ public class Aura extends Module {
         int previousSlot = -1;
         if (autoSwitch.get() != SwitchMode.None && !itemInHand()) {
             Predicate<ItemStack> predicate = switch (weapon.get()) {
-                case Axe -> stack -> stack.getItem() instanceof AxeItem;
-                case Sword -> stack -> stack.getItem() instanceof SwordItem;
-                case Mace -> stack -> stack.getItem() instanceof MaceItem;
-                case Trident -> stack -> stack.getItem() instanceof TridentItem;
-                case All -> stack -> stack.getItem() instanceof AxeItem || stack.getItem() instanceof SwordItem || stack.getItem() instanceof MaceItem || stack.getItem() instanceof TridentItem;
+                case Axe -> stack -> isAxe(stack.getItem());
+                case Sword -> stack -> isSword(stack.getItem());
+                case Mace -> stack -> isMace(stack.getItem());
+                case Trident -> stack -> isTrident(stack.getItem());
+                case All -> stack -> isAxe(stack.getItem()) || isSword(stack.getItem()) || isMace(stack.getItem()) || isTrident(stack.getItem());
                 default -> o -> true;
             };
             FindItemResult weaponResult = InvUtils.findInHotbar(predicate);
@@ -208,14 +210,29 @@ public class Aura extends Module {
         }
     }
     private boolean itemInHand() {
+        Item item = mc.player.getMainHandStack().getItem();
         return switch (weapon.get()) {
-            case Axe -> mc.player.getMainHandStack().getItem() instanceof AxeItem;
-            case Sword -> mc.player.getMainHandStack().getItem() instanceof SwordItem;
-            case Mace -> mc.player.getMainHandStack().getItem() instanceof MaceItem;
-            case Trident -> mc.player.getMainHandStack().getItem() instanceof TridentItem;
-            case All -> mc.player.getMainHandStack().getItem() instanceof AxeItem || mc.player.getMainHandStack().getItem() instanceof SwordItem || mc.player.getMainHandStack().getItem() instanceof MaceItem || mc.player.getMainHandStack().getItem() instanceof TridentItem;
+            case Axe -> isAxe(item);
+            case Sword -> isSword(item);
+            case Mace -> isMace(item);
+            case Trident -> isTrident(item);
+            case All -> isAxe(item) || isSword(item) || isMace(item) || isTrident(item);
             default -> true;
         };
+    }
+    private boolean isSword(Item item) {
+        return item == Items.WOODEN_SWORD || item == Items.STONE_SWORD || item == Items.IRON_SWORD || 
+               item == Items.GOLDEN_SWORD || item == Items.DIAMOND_SWORD || item == Items.NETHERITE_SWORD;
+    }
+    private boolean isAxe(Item item) {
+        return item == Items.WOODEN_AXE || item == Items.STONE_AXE || item == Items.IRON_AXE || 
+               item == Items.GOLDEN_AXE || item == Items.DIAMOND_AXE || item == Items.NETHERITE_AXE;
+    }
+    private boolean isMace(Item item) {
+        return item == Items.NETHERITE_MACE;
+    }
+    private boolean isTrident(Item item) {
+        return item == Items.TRIDENT;
     }
 
     private boolean check() {
